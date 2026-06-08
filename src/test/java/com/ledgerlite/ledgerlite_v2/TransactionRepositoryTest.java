@@ -2,6 +2,7 @@ package com.ledgerlite.ledgerlite_v2;
 
 import com.ledgerlite.ledgerlite_v2.model.Transaction;
 import com.ledgerlite.ledgerlite_v2.repository.TransactionRepository;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
