@@ -1,12 +1,16 @@
 import com.ledgerlite.ledgerlite_v2.LedgerliteV2Application;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-
+import org.junit.jupiter.api.AfterEach;
+import com.ledgerlite.ledgerlite_v2.repository.TransactionRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import com.ledgerlite.ledgerlite_v2.model.Transaction;
+import java.time.LocalDate;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,6 +23,13 @@ class TransactionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @AfterEach
+    void tearDown() {
+        transactionRepository.deleteAll();
+    }
 
     @Test
     void createTransaction_returns200_andEchoesDescription() throws Exception {
@@ -41,5 +52,24 @@ class TransactionControllerTest {
     void getAllTransactions_returns200() throws Exception {
         mockMvc.perform(get("/api/transactions"))
                 .andExpect(status().isOk());
+    }
+    @Test
+    void deleteTransaction_returns200_andRemovesIt() throws Exception {
+        Transaction transaction = new Transaction();
+        transaction.setDescription("Rent");
+        transaction.setAmount(1200);
+        transaction.setType("EXPENSE");
+        transaction.setDate(LocalDate.now());
+
+        Transaction saved = transactionRepository.save(transaction);
+        Long id = saved.getId();
+
+        mockMvc.perform(delete("/api/transactions/" + id))
+                .andExpect(status().isOk());
+        assertFalse(transactionRepository.existsById(id));
+
+
+
+
     }
 }
