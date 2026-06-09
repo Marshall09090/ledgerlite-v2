@@ -34,12 +34,13 @@ class TransactionControllerTest {
     @Test
     void createTransaction_returns200_andEchoesDescription() throws Exception {
         String json = """
-            {
-              "description": "Salary",
-              "amount": 5000,
-              "type": "INCOME"
-            }
-            """;
+                {
+                   "description": "Salary",
+                   "amount": 5000,
+                   "type": "INCOME",
+                   "date": "2026-01-15"
+                 }
+                """;
 
         mockMvc.perform(post("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -53,6 +54,7 @@ class TransactionControllerTest {
         mockMvc.perform(get("/api/transactions"))
                 .andExpect(status().isOk());
     }
+
     @Test
     void deleteTransaction_returns200_andRemovesIt() throws Exception {
         Transaction transaction = new Transaction();
@@ -66,10 +68,14 @@ class TransactionControllerTest {
 
         mockMvc.perform(delete("/api/transactions/" + id))
                 .andExpect(status().isOk());
-        assertFalse(transactionRepository.existsById(id));
+        assertFalse(transactionRepository.existsById(id));}
 
-
-
-
+    @Test
+    void invalidTransactionReturns400() throws Exception {
+        String badJson = "{ \"description\": \"\", \"amount\": -50, \"type\": \"\" }";
+        mockMvc.perform(post("/api/transactions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(badJson))
+                .andExpect(status().isBadRequest());
     }
 }
