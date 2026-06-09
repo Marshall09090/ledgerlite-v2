@@ -2,6 +2,7 @@ package com.ledgerlite.ledgerlite_v2.controller;
 
 import com.ledgerlite.ledgerlite_v2.model.Transaction;
 import com.ledgerlite.ledgerlite_v2.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public Transaction create(@RequestBody Transaction transaction) {
+    public Transaction create(@Valid @RequestBody Transaction transaction) {
         return service.create(transaction);
     }
 
