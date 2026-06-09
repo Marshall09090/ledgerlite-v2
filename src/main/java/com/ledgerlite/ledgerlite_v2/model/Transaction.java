@@ -2,6 +2,10 @@ package com.ledgerlite.ledgerlite_v2.model;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 @Entity
 @Table(name="transactions")
@@ -9,9 +13,13 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "description is required")
         private String description;
+    @Positive(message = "amount must be greater than 0")
         private double amount;
+    @NotBlank(message = "type is required")
         private String type;
+    @NotNull(message = "date is required")
         private LocalDate date;
 
         public Transaction(){}
