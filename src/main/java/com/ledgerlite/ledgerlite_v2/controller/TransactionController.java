@@ -4,6 +4,7 @@ import com.ledgerlite.ledgerlite_v2.model.Transaction;
 import com.ledgerlite.ledgerlite_v2.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -27,10 +28,13 @@ public class TransactionController {
     public Transaction create(@Valid @RequestBody Transaction transaction) {
         return service.create(transaction);
     }
-
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (!service.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         service.delete(id);
-    }
-    
+        return ResponseEntity.ok().build();
+        }
+
 }

@@ -78,4 +78,9 @@ class TransactionControllerTest {
                         .content(badJson))
                 .andExpect(status().isBadRequest());
     }
+    @Test
+    void deleteNonExistentTransaction_returns404() throws Exception {
+        mockMvc.perform(delete("/api/transactions/999999"))
+                .andExpect(status().isNotFound());
+    }
 }
