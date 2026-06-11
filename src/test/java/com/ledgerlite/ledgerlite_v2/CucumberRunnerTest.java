@@ -13,6 +13,5 @@ import static io.cucumber.junit.platform.engine.Constants.FILTER_TAGS_PROPERTY_N
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.ledgerlite.ledgerlite_v2.steps")
 @ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "not @wip")
 
-
 public class CucumberRunnerTest {
 }
