@@ -2,7 +2,6 @@ Feature: Transactions API
   As a user of LedgerLite
   I want to manage transactions through the API
   So that I can record my income and expenses
-  @wip
   Scenario: Get all transactions returns a successful response
     When I request all transactions
     Then the response status should be 200
