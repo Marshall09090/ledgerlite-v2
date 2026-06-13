@@ -32,7 +32,7 @@ class TransactionControllerTest {
     }
 
     @Test
-    void createTransaction_returns200_andEchoesDescription() throws Exception {
+    void createTransaction_returns201_andEchoesDescription() throws Exception {
         String json = """
                 {
                    "description": "Salary",
@@ -45,7 +45,7 @@ class TransactionControllerTest {
         mockMvc.perform(post("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.description").value("Salary"));
     }
 
