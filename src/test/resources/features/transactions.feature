@@ -13,3 +13,7 @@ Feature: Transactions API
   Scenario: Creating a transaction with invalid data is rejected
     When I create a transaction with description "" amount -50 type ""
     Then the response status should be 400
+
+  Scenario: Deleting a transaction that does not exist is rejected
+    When I delete a transaction that does not exist
+    Then the response status should be 404

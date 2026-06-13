@@ -31,6 +31,16 @@ public class TransactionSteps {
         HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
         statusCode = httpResponse.statusCode();
     }
+    @When("I delete a transaction that does not exist")
+    public void i_delete_a_transaction_that_does_not_exist() throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:" + port + "/api/transactions/999999"))
+                .DELETE()
+                .build();
+        HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+        statusCode = httpResponse.statusCode();
+    }
 
     @When("I create a transaction with description {string} amount {int} type {string}")
     public void i_create_a_transaction(String description, int amount, String type) {
