@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LedgerLite</title>
+</head>
+<body>
+<h1>LedgerLite Transactions</h1>
+
+<h2>Add a transaction</h2>
+<input id="description" placeholder="Description">
+<input id="amount" type="number" placeholder="Amount">
+<select id="type">
+    <option value="INCOME">INCOME</option>
+    <option value="EXPENSE">EXPENSE</option>
+</select>
+<button id="add-btn" onclick="addTransaction()">Add</button>
+
+<h2>Transactions</h2>
+<ul id="transaction-list"></ul>
+
+<script>
+    async function loadTransactions() {
+        const res = await fetch('/api/transactions');
+        const data = await res.json();
+        const list = document.getElementById('transaction-list');
+        list.innerHTML = '';
+        data.forEach(t => {
+            const li = document.createElement('li');
+            li.className = 'transaction-item';
+            li.textContent = t.description + ' — ' + t.amount + ' (' + t.type + ')';
+            list.appendChild(li);
+        });
+    }
+
+    async function addTransaction() {
+        const body = {
+            description: document.getElementById('description').value,
+            amount: parseFloat(document.getElementById('amount').value),
+            type: document.getElementById('type').value,
+            date: new Date().toISOString().split('T')[0]
+        };
+        await fetch('/api/transactions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        document.getElementById('description').value = '';
+        document.getElementById('amount').value = '';
+        loadTransactions();
+    }
+
+    loadTransactions();
+</script>
+</body>
+</html>
