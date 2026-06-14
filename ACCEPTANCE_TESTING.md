@@ -16,13 +16,14 @@ The acceptance tests verify the Transactions REST API end-to-end by:
 
 Because the full application stack runs (controller → service → repository → H2 database), these are true **acceptance tests**, not unit tests.
 
-**Current status: 3 scenarios, all passing.**
+**Current status: 4 scenarios, all passing.**
 
 | Scenario | Request | Expected Status |
 |---|---|---|
 | Get all transactions returns a successful response | `GET /api/transactions` | 200 |
 | Creating a transaction with valid data succeeds | `POST /api/transactions` (valid body) | 201 |
 | Creating a transaction with invalid data is rejected | `POST /api/transactions` (empty description, negative amount) | 400 |
+| Deleting a transaction that does not exist is rejected | `DELETE /api/transactions/{id}` (nonexistent id) | 404 |
 
 ---
 
@@ -38,7 +39,7 @@ No server needs to be running. The tests start (and stop) the application themse
 
 **From IntelliJ:** run the `CucumberRunnerTest` class (green ▶).
 
-Expected result: `Tests run: 3, Failures: 0, Errors: 0` and `BUILD SUCCESS`.
+Expected result: `Tests run: 4, Failures: 0, Errors: 0` and `BUILD SUCCESS`.
 
 ---
 
@@ -116,9 +117,9 @@ URLs are then built as `"http://localhost:" + port + "/api/transactions"`.
 ## HTTP Clients: why there are two
 
 | Step | Client | Reason |
-|---|---|---|
+|-|-|---|
 | POST scenarios | REST Assured | Standard choice; works correctly for these requests |
-| GET scenario | JDK `java.net.http.HttpClient` | REST Assured's Groovy-based engine threw an internal `NullPointerException` (`Class.isAssignableFrom` inside `CsrfFilter`/`RequestSpecificationImpl`) on this GET in our environment. The failure persisted across REST Assured 5.3.2, 5.5.0, and 5.5.6, against a verified-healthy endpoint (confirmed via `curl`), indicating a library/environment incompatibility rather than an application bug. The JDK's built-in client has no external dependencies and resolved it cleanly. |
+| GET and DELETE scenarios | JDK `java.net.http.HttpClient`| REST Assured's Groovy-based engine threw an internal `NullPointerException` (`Class.isAssignableFrom` inside `CsrfFilter`/`RequestSpecificationImpl`) on this GET in our environment. The failure persisted across REST Assured 5.3.2, 5.5.0, and 5.5.6, against a verified-healthy endpoint (confirmed via `curl`), indicating a library/environment incompatibility rather than an application bug. The JDK's built-in client has no external dependencies and resolved it cleanly. |
 
 Both clients write the resulting status into one shared field:
 
